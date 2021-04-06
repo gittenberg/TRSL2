@@ -27,7 +27,7 @@ class MRNA:
         initializes one mRNA molecule
         """
         self.index = index          # counts the unique mRNA molecules; no biological meaning
-        self.length = length        # length of mRNA in nts # http://bionumbers.hms.harvard.edu//bionumber.aspx?id=107678&ver=1
+        self.length = length        # length of mRNA in nts
         self.geneID = geneID        # corresponds to sequence and proteinID; there might be more than one mRNA with this geneID
         self.ribosomes = ribosomes  # keys between 0 and self.length - 3, value None: no AA-tRNA, <value>: AA-tRNA of type <value>
         self.tic = False            # initiation time for a certain ribosome on this mRNA
@@ -77,8 +77,11 @@ class MRNA:
         """
         returns True iff no ribosomes within the next by + 3 * cr positions from pos
         TODO: potentially time-consuming
+        TODO: used anywhere?
         """
-        return not any([ribo in range(pos + 1, pos + 1 + by + 3 * cr) for ribo in self.ribosomes])
+        start_range = pos + 1
+        end_range = pos + 1 + by + 3 * cr
+        return not any([ribo in range(start_range, end_range) for ribo in self.ribosomes])
 
     def find_max_free_range(self, pos):
         """
@@ -91,7 +94,7 @@ class MRNA:
             # log.debug("find_max_free_range: next_ribo_pos, pos = %s, %s", next_ribo_pos, pos)
             max_free_range = next_ribo_pos - pos
         else:
-            max_free_range = 3 * cr + 3  # effectively infinite if no downstream ribosomes due to 3 ' utr
+            max_free_range = self.length - pos
         return max_free_range
 
     def termination_condition(self):
