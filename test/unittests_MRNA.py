@@ -36,7 +36,11 @@ class TestMRNAMethods(unittest.TestCase):
         testMRNA2 = MRNA.MRNA(index=6, length=330, geneID=None, ribosomes={99: None, 300: None})
         self.assertFalse(expr=testMRNA2.termination_condition())
 
+    def test_prev_range_free(self):
+        testMRNA = MRNA.MRNA(index=7, length=600, geneID=None, ribosomes={100: None, 300: None})
+        self.assertTrue(expr=testMRNA.prev_range_free(pos=300, by=20))
+        self.assertFalse(expr=testMRNA.prev_range_free(pos=300, by=220))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
-    #test
