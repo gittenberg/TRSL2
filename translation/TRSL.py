@@ -45,6 +45,7 @@ import MRNA
 # read model parameters
 from translation.parameters import *
 
+
 class TRSL(object):
     """
     class representing a translational network
@@ -53,7 +54,7 @@ class TRSL(object):
     # initiation and auxiliary functions
     ###################################################################################################################
     # TODO: move numbers to parameters.py
-    def __init__(self, nribo=200000, proteome=col.Counter({}), detail=False):
+    def __init__(self, nribo=nribo, proteome=col.Counter({}), detail=False):
         """
         initializes the parameters of the translation process
         """
@@ -76,20 +77,25 @@ class TRSL(object):
 
         self.timerange = []
         self.timecourses = {}
-        self._tRNA = col.Counter({i: int(0.5 + n_tRNA / (self.types_tRNA * 1.0)) for i in range(1, self.types_tRNA + 1)})  # uniform distribution because translation is not specific
+        self._tRNA = col.Counter({i: int(0.5 + n_tRNA / (self.types_tRNA * 1.0))
+                                  for i in range(1, self.types_tRNA + 1)})
+        # uniform distribution because translation in this file is not specific
 
-        # Warning: if ribosomes are not passed explicitely in the following MRNA constructor, they will be passed by reference and all MRNAs will share the same ribosome!
-        self.mRNAs = [MRNA.MRNA(index=gene, length=1251, ribosomes={}) for gene in [ran.randint(1, n_genes) for k in range(self.n_mRNA)]]  # randomized gene expressions
-        # self.ribo_bound = sum(len(mRNA.ribosomes) for mRNA in self.mRNAs)  # number of ribosomes bound to mRNA
+        # Warning: if ribosomes are not passed explicitely in the following MRNA constructor, they will be passed by
+        # reference and all MRNAs will share the same ribosome!
+        self.mRNAs = [MRNA.MRNA(index=gene, length=1251, ribosomes={})
+                      for gene in [ran.randint(1, n_genes) for k in range(self.n_mRNA)]]  # randomized gene expressions
+
         self.proteins = proteome  # contains protein IDs and counts not including polypeptides in statu nascendi
-        self.protein_length = sum(self.proteins.values())  # not quite true, equals number of peptide bonds (difference is plus/minus 1)
+        self.protein_length = sum(self.proteins.values())
+        # equals number of peptide bonds (difference to protein length is plus/minus 1)
 
         self.init_rate = self.p_init / tau_ribo / num_pos_ribo        # 8.157e-07 s^-1 (yeast)
         self.elong_rate = competition / tau_tRNA / num_pos_tRNA  # 0.000140 s^-1  (yeast)
 
         self.detail = detail  # whether details are saved (e.g. ribosomes for every time step)
         (self.nocollision, self.collision) = (0, 0)
-        # to count collisions at the initiation site; I am only using this in the specific mode
+        # to count collisions at the initiation site; I am only using this in the specific mode # TODO: FIXME
 
 
     @property
