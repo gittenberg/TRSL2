@@ -95,7 +95,7 @@ class TRSL(object):
 
         self.detail = detail  # whether details are saved (e.g. ribosomes for every time step)
         (self.nocollision, self.collision) = (0, 0)
-        # to count collisions at the initiation site; I am only using this in the specific mode # TODO: FIXME
+        # to count collisions at the initiation site; I am only using this in the specific mode # TODO: should go to TRSL_specific then
 
 
     @property
