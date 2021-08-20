@@ -41,6 +41,10 @@ class TestMRNAMethods(unittest.TestCase):
         self.assertTrue(expr=testMRNA.prev_range_free(pos=300, by=20))
         self.assertFalse(expr=testMRNA.prev_range_free(pos=300, by=220))
 
+    def test_translocate_ribosome(self):
+        testMRNA = MRNA.MRNA(index=7, length=600, geneID=None, ribosomes={100: None, 300: None})
+        testMRNA.translocate_ribosome(pos=100, by=6)
+        self.assertEqual(first=testMRNA.ribosomes, second={106: None, 300: None})
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
