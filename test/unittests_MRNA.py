@@ -46,5 +46,6 @@ class TestMRNAMethods(unittest.TestCase):
         testMRNA.translocate_ribosome(pos=100, by=6)
         self.assertEqual(first=testMRNA.ribosomes, second={106: None, 300: None})
 
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
