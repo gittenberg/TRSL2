@@ -5,3 +5,4 @@ print(testMRNA.ribosomes)
 testMRNA.attach_ribosome_at_start()
 print(testMRNA.ribosomes)
 
+# test
