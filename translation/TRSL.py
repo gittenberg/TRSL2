@@ -36,6 +36,7 @@ import collections as col
 import math
 import logging as log
 import os.path
+import pickle
 
 import numpy as np
 import numpy.random as npr
@@ -53,8 +54,8 @@ class TRSL(object):
 
     # initiation and auxiliary functions
     ###################################################################################################################
-    # TODO: move numbers to parameters.py
-    def __init__(self, nribo=nribo, proteome=col.Counter({}), types_tRNA=types_tRNA, n_mRNA = n_mRNA, detail=False):
+    def __init__(self, nribo=nribo, proteome=col.Counter({}), types_tRNA=types_tRNA, n_mRNA=n_mRNA,
+                 mRNA_length=mRNA_av_length, detail=False):
         """
         initializes the parameters of the translation process
         """
@@ -83,7 +84,7 @@ class TRSL(object):
 
         # Warning: if ribosomes are not passed explicitely in the following MRNA constructor, they will be passed by
         # reference and all MRNAs will share the same ribosome!
-        self.mRNAs = [MRNA.MRNA(index=gene, length=mRNA_av_length, ribosomes={})
+        self.mRNAs = [MRNA.MRNA(index=gene, length=mRNA_length, ribosomes={})
                       for gene in [ran.randint(1, n_genes) for k in range(self.n_mRNA)]]  # randomized gene expressions
 
         self.proteins = proteome  # contains protein IDs and counts not including polypeptides in statu nascendi
@@ -144,18 +145,18 @@ class TRSL(object):
     def ribo_bound(self, value):
         self._ribo_bound = value
 
-    def __getitem__(self, i):
-        """
-        This allows to address the modeldict like trsl['vars']
-        """
-        return self.modeldict[i]
+    # def __getitem__(self, i): # TODO: loeschen?
+    #     """
+    #     This allows to address the modeldict like trsl['vars']
+    #     """
+    #     return self.modeldict[i]
 
     def inspect(self):
         """
         Print all dictionaries in TRSL
         """
         print("----------------------------------------------------------")
-        for key in sorted(self.__dict__):
+        for key in sorted(self.__dict__): # TODO: vereinfachen, wenn modeldict nicht mehr gebraucht
             if key != "modeldict":
                 print(key, ":")
                 print(self.__dict__[key])
@@ -173,6 +174,9 @@ class TRSL(object):
 
         :return: dict
         """
+        import time
+        now = time.strftime("%Y%m%d_%H%M", time.gmtime())
+
         results = dict()
         results['proteome'] = self.proteins
         results['peptide_bonds'] = self.protein_length
@@ -180,11 +184,10 @@ class TRSL(object):
         results['timerange'] = self.timerange
         results["timecourses"] = self.timecourses
         results["description"] = ""
-        import time; now = time.strftime("%Y%m%d_%H%M", time.gmtime())
         results["time_stamp"] = now
         results["n_ribosomes"] = self.ribo_bound + self.ribo_free
-        results["collisions"] = self.collision
-        results["nocollisions"] = self.nocollision
+        results["collisions"] = self.collision      # TODO: may need to go to TRSL_specific
+        results["nocollisions"] = self.nocollision  # TODO: may need to go to TRSL_specific
         results["n_tRNA"] = sum(self._tRNA.values())
         duration = self.timerange[-1] - self.timerange[0] + 1
         results["duration"] = duration
@@ -200,11 +203,11 @@ class TRSL(object):
         """
         results = self.get_state()
         results["description"] = description
-        from pickle import dump
+
         filename = "{}_{}_{}_ribosomes_{}s.p".format(description, results['time_stamp'], results["n_ribosomes"],
                                                      str(int(results["duration"])).zfill(4))
         pathname = os.path.join(dirname, filename)
-        dump(results, open(pathname, "wb"))
+        pickle.dump(results, open(pathname, "wb"))
         print(description)
 
     # functions used in simulation
@@ -229,7 +232,7 @@ class TRSL(object):
         elif mRNA.ribosomes[pos] != None:
             log.warning("insert_tRNA: cannot insert tRNA at %s: tRNA already bound", pos)
             success = False
-        elif self._tRNA_free[tRNA_type] < 1:
+        elif self.tRNA_free[tRNA_type] < 1:
             # log.warning("insert_tRNA: cannot insert tRNA type %s at %s: not enough free tRNA", tRNA_type, pos)
             # log.warning("insert_tRNA: tRNA_type is: %s", tRNA_type)
             # log.warning("insert_tRNA: bound tRNA is: %s", self.tRNA_bound)

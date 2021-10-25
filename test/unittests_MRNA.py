@@ -1,7 +1,6 @@
 import unittest
 from translation import MRNA, parameters
 
-
 class TestMRNAMethods(unittest.TestCase):
     def test_attach_ribosome_at_start(self):
         testMRNA = MRNA.MRNA(index=0, length=parameters.mRNA_av_length, geneID=None, ribosomes={})
