@@ -1,12 +1,17 @@
-cr = 10                                    # ribosome footprint in codons
-mRNA_av_length = 1251                      # source: http://bionumbers.hms.harvard.edu/bionumber.aspx?id=107678
-
 # used in MRNA_specific.py
 init_rate = 8.2e-07                        # average initiation rate in s^{-1}
 stopcodons = ['uga', 'uaa', 'uag']
+cr = 10                                    # ribosome footprint in codons
 
 # used in TRSL.py
+mRNA_av_length = 1251                      # source: http://bionumbers.hms.harvard.edu/bionumber.aspx?id=107678
+types_tRNA = 42                            # number of types of tRNAs, including termination factor
+n_mRNA = 60000                             # 60000 # number of mRNAs
+                                           # (or 20000: http://book.bionumbers.org/how-many-mrnas-are-in-a-cell/)
 nribo = 200000                             # number of ribosomes
+                                           # http://bionumbers.hms.harvard.edu/bionumber.aspx?&id=100267&ver=13&trm=ribosomes/cell
+init_rate_low = 3.5e-06                    # initiation probability at mRNA 5' end (lower bound)
+init_rate_high = 0.115                     # initiation probability at mRNA 5' end (upper bound)
 V = 4.2e-17                                # m^3 # cell volume
                                            # http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000865
 n_genes = 3795                             # number of protein-coding genes in the experiment

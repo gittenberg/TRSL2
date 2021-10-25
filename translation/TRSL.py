@@ -54,7 +54,7 @@ class TRSL(object):
     # initiation and auxiliary functions
     ###################################################################################################################
     # TODO: move numbers to parameters.py
-    def __init__(self, nribo=nribo, proteome=col.Counter({}), detail=False):
+    def __init__(self, nribo=nribo, proteome=col.Counter({}), types_tRNA=types_tRNA, n_mRNA = n_mRNA, detail=False):
         """
         initializes the parameters of the translation process
         """
@@ -62,13 +62,13 @@ class TRSL(object):
 
         # Parameters
         ###############################################################################################################
-        self.types_tRNA = 42  # number of types of tRNAs, including termination factor
+        self.types_tRNA = types_tRNA
 
         # Initial values
         ##################################################################################################################################
-        self.n_mRNA = 60000                      # 60000 # number of mRNAs (or 20000: http://book.bionumbers.org/how-many-mrnas-are-in-a-cell/)
-        self.ribo_free = nribo                   # 200000; number of ribosomes # http://bionumbers.hms.harvard.edu/bionumber.aspx?&id=100267&ver=13&trm=ribosomes/cell
-        self.p_init = math.sqrt(3.5e-06 * 0.115) # math.sqrt(3.5e-06 * 0.115) # initiation probability at mRNA 5' end # geometric mean btw the lowest and highest possible value
+        self.n_mRNA = n_mRNA
+        self.ribo_free = nribo
+        self.p_init = math.sqrt(init_rate_low * init_rate_high) # geometric mean btw the lowest and highest possible value
 
         self.GTP = 1e3 * avogadro * V  # GTP molecules (made up)
         self.GDP = 0                   # GDP molecules
@@ -83,20 +83,16 @@ class TRSL(object):
 
         # Warning: if ribosomes are not passed explicitely in the following MRNA constructor, they will be passed by
         # reference and all MRNAs will share the same ribosome!
-        self.mRNAs = [MRNA.MRNA(index=gene, length=1251, ribosomes={})
+        self.mRNAs = [MRNA.MRNA(index=gene, length=mRNA_av_length, ribosomes={})
                       for gene in [ran.randint(1, n_genes) for k in range(self.n_mRNA)]]  # randomized gene expressions
 
         self.proteins = proteome  # contains protein IDs and counts not including polypeptides in statu nascendi
-        self.protein_length = sum(self.proteins.values())
-        # equals number of peptide bonds (difference to protein length is plus/minus 1)
+        self.protein_length = sum(self.proteins.values())  # equals number of peptide bonds # TODO: what are values?
 
-        self.init_rate = self.p_init / tau_ribo / num_pos_ribo        # 8.157e-07 s^-1 (yeast)
+        self.init_rate = self.p_init / tau_ribo / num_pos_ribo   # 8.157e-07 s^-1 (yeast)
         self.elong_rate = competition / tau_tRNA / num_pos_tRNA  # 0.000140 s^-1  (yeast)
 
         self.detail = detail  # whether details are saved (e.g. ribosomes for every time step)
-        (self.nocollision, self.collision) = (0, 0)
-        # to count collisions at the initiation site; I am only using this in the specific mode # TODO: should go to TRSL_specific then
-
 
     @property
     def tRNA_bound(self):
