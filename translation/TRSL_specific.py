@@ -15,7 +15,7 @@ import collections as col
 import numpy as np
 
 import numpy.random as npr
-import cPickle as pkl
+import pickle as pkl
 
 import TRSL
 import MRNA_specific
@@ -139,7 +139,7 @@ def chunker(seq, size):
     '''
     generator that takes a sequence and returns substrings of given size
     '''
-    return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+    return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
 
 def translate_mRNA(sequence):
@@ -329,7 +329,7 @@ if __name__ == "__main__":
            }
 
     genes = list(set(conf['exome']) & set(conf['transcriptome']) & set(conf['init_rates']) & set(conf['decay_constants']))
-    print "found %s genes in common." % len(genes)
+    print("found %s genes in common." % len(genes))
 
     mRNAs = []
     counter = 0
@@ -338,10 +338,10 @@ if __name__ == "__main__":
         for instance in range(conf['transcriptome'][gene]):
             mRNAs.append(MRNA_specific.mRNA_spec(index=counter, sequence=conf['exome'][gene], geneID=gene, ribosomes={}, init_rate=conf['init_rates'][gene]))  # do not just multiply the list
             counter += 1
-    print "built gene library, next: run TRSL_spec."
+    print("built gene library, next: run TRSL_spec.")
 
     description = conf['description']
-    print description
+    print(description)
 
     duration = 20.0
 

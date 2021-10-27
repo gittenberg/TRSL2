@@ -258,39 +258,40 @@ class TRSL(object):
             #log.warning("release_tRNA: self.tRNA_bound[tRNA_type] == %s", self._tRNA_bound[tRNA_type])
             success = False
         return success
-    
-    def elongate_while_possible(self, mRNA, k, current_pos):
-        """
-        attempts to elongate the protein on mRNA by at most k AAs starting at current_pos
-        stops if steric hindrance by another ribosome , or end of mRNA is encountered
-        NOTE: function is now obsolete
-        """
-        free_range = mRNA.find_max_free_range(current_pos)
-        # log.debug("elongate_while_possible: found free range of %s nts downstream of %s", free_range, current_pos)
-        codons = min(k, free_range / 3)  # number k of available tRNAs and sterically free codons limit elongation # integer division
-        codons = max(0, codons)  # not negative
-        codons = min((mRNA.length - current_pos) / 3, codons)  # cannot translate behind end of mRNA
-        # log.debug("elongate_while_possible: %s tRNAs, free range of %s nts, trying to elongate by %s codons", k, free_range, codons)
-        if self.GTP >= codons:
-            if codons > 0:
-                # log.debug("elongate_while_possible: possible to translocate by %s codons", codons)
-                # elongation: release tRNA
-                previous_type = mRNA.ribosomes[current_pos]  # type to be released at ribo_pos, could be made sequence dependent
-                self.release_tRNA(mRNA, current_pos, previous_type)
-                # translocation: move ribosome
-                mRNA.translocate_ribosome(current_pos, by=3 * codons)
-                # bind AA-tRNA
-                last_type = ran.choice(self._tRNA.keys())  # type to be inserted at current_pos
-                # log.debug("elongate_while_possible: last position was %s, attempting to insert tRNA at position %s", current_pos, current_pos+3*codons)
-                self.insert_tRNA(mRNA, current_pos + 3 * codons, last_type)  # try to insert AA-tRNA in the ribosome
-                # translocation: elongate proteinlength
-                self.protein_length += codons
-                self.GTP -= codons
-                self.GDP += codons
-        else:
-            log.warning("elongate_while_possible: not enough GTP")
-        # log.debug("elongate_while_possible: ribosomes: tRNA is now %s", mRNA.ribosomes)
-        # log.debug("elongate_while_possible: protein length is now %s", self.proteinlength)
+
+    # TODO: Loeschkandidat
+    # def elongate_while_possible(self, mRNA, k, current_pos):
+    #     """
+    #     attempts to elongate the protein on mRNA by at most k AAs starting at current_pos
+    #     stops if steric hindrance by another ribosome , or end of mRNA is encountered
+    #     NOTE: function is now obsolete
+    #     """
+    #     free_range = mRNA.find_max_free_range(current_pos)
+    #     # log.debug("elongate_while_possible: found free range of %s nts downstream of %s", free_range, current_pos)
+    #     codons = min(k, free_range / 3)  # number k of available tRNAs and sterically free codons limit elongation # integer division
+    #     codons = max(0, codons)  # not negative
+    #     codons = min((mRNA.length - current_pos) / 3, codons)  # cannot translate behind end of mRNA
+    #     # log.debug("elongate_while_possible: %s tRNAs, free range of %s nts, trying to elongate by %s codons", k, free_range, codons)
+    #     if self.GTP >= codons:
+    #         if codons > 0:
+    #             # log.debug("elongate_while_possible: possible to translocate by %s codons", codons)
+    #             # elongation: release tRNA
+    #             previous_type = mRNA.ribosomes[current_pos]  # type to be released at ribo_pos
+    #             self.release_tRNA(mRNA, current_pos, previous_type)
+    #             # translocation: move ribosome
+    #             mRNA.translocate_ribosome(current_pos, by=3 * codons)
+    #             # bind AA-tRNA
+    #             last_type = ran.choice(self._tRNA.keys())  # type to be inserted at current_pos
+    #             # log.debug("elongate_while_possible: last position was %s, attempting to insert tRNA at position %s", current_pos, current_pos+3*codons)
+    #             self.insert_tRNA(mRNA, current_pos + 3 * codons, last_type)  # try to insert AA-tRNA in the ribosome
+    #             # translocation: elongate proteinlength
+    #             self.protein_length += codons
+    #             self.GTP -= codons
+    #             self.GDP += codons
+    #     else:
+    #         log.warning("elongate_while_possible: not enough GTP")
+    #     # log.debug("elongate_while_possible: ribosomes: tRNA is now %s", mRNA.ribosomes)
+    #     # log.debug("elongate_while_possible: protein length is now %s", self.proteinlength)
 
     def fill_empty_ribosomes(self, this_mRNA, time):
         """
