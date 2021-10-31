@@ -51,6 +51,8 @@ class TestTRSLMethods(unittest.TestCase):
         # False because mRNA is too short
         self.assertFalse(success2)
 
+    # TODO: unfinished!
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

@@ -462,7 +462,7 @@ class TRSL(object):
 
     def update_solve_internal(self, deltat, fields, start, time):
         # update standard
-        for fieldname, fieldvalue in fields.iteritems():
+        for fieldname, fieldvalue in fields.items():
             self.timecourses[fieldname].append(fieldvalue)
 
         # now update proteins
