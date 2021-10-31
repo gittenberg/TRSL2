@@ -133,5 +133,4 @@ tRNA_types = {
     43: {'anticodon': 'cuc', 'abundancy': 22140}
 }
 
-stopcodons = ['uaa', 'uga', 'uag']
 anticodon_index = {tRNA_types[i]['anticodon']: i for i in tRNA_types}

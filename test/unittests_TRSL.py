@@ -53,6 +53,10 @@ class TestTRSLMethods(unittest.TestCase):
 
     # TODO: unfinished!
 
+    def test_elongate_mRNA(self):
+
+        self.assertTrue(True)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
