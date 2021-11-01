@@ -54,11 +54,13 @@ class TRSL(object):
 
     # initiation and auxiliary functions
     ###################################################################################################################
-    def __init__(self, nribo=nribo, proteome=col.Counter({}), types_tRNA=types_tRNA, n_mRNA=n_mRNA,
+    def __init__(self, nribo=nribo, proteome=None, types_tRNA=types_tRNA, n_mRNA=n_mRNA,
                  mRNA_length=mRNA_av_length, detail=False):
         """
         initializes the parameters of the translation process
         """
+        if proteome is None:
+            proteome = col.Counter({})
         log.info("__init__: initializing TRSL")
 
         # Parameters
@@ -186,8 +188,8 @@ class TRSL(object):
         results["description"] = ""
         results["time_stamp"] = now
         results["n_ribosomes"] = self.ribo_bound + self.ribo_free
-        results["collisions"] = self.collision      # TODO: may need to go to TRSL_specific
-        results["nocollisions"] = self.nocollision  # TODO: may need to go to TRSL_specific
+        # results["collisions"] = self.collision      # TODO: needs to go to TRSL_specific
+        # results["nocollisions"] = self.nocollision  # TODO: needs to go to TRSL_specific
         results["n_tRNA"] = sum(self._tRNA.values())
         duration = self.timerange[-1] - self.timerange[0] + 1
         results["duration"] = duration
@@ -508,10 +510,10 @@ class TRSL(object):
 
         self.timerange = np.arange(start, end, deltat)
         for time in self.timerange:
-            if not int(time) % 100:
-                print("solve_internal: reached time {} sec.".format(int(time)))
+            if int(time) == time:
+                print("solve_internal: reached time %.2f sec." % time)
             log.info("################################################################################################")
-            log.info("solve_internal: time: %s", time)
+            log.info("solve_internal: time: .2f" % time)
             log.info("################################################################################################")
 
             self.update_processes(deltat, time)

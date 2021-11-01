@@ -137,3 +137,5 @@ dmypy.json
 /.idea/TRSL2.iml
 /.idea/vcs.xml
 /.idea/workspace.xml
+
+/results/*
