@@ -21,11 +21,17 @@ conf = {1: {
     'exome': pickle.load(open("../parameters/orf_coding.p", "rb")),
     'transcriptome': pickle.load(open("../parameters/transcriptome_plotkin_20000.p", "rb")),
     'init_rates': pickle.load(open("../parameters/init_rates_plotkin.p", "rb")),
-    'description': '20000 transcriptome, full exome, no decay, Plotkin initiation probabilities'}
+    'description': '20000 transcriptome, full exome, no decay, Plotkin initiation probabilities'},
+    8: {
+    # base case run with reduced number of genes (limited by availability of initiation rates)
+    'exome': pickle.load(open("../parameters/orf_coding.p", "rb")),
+    'transcriptome': pickle.load(open("../parameters/transcriptome_shah.p", "rb")),
+    'init_rates': pickle.load(open("../parameters/init_rates_plotkin.p", "rb")),
+    'description': 'updated Shah transcriptome, full exome, no decay, updated initiation rates according to Shah'}
 }
 
 if __name__ == "__main__":
-    for i in [2]:  # set configuration_id
+    for i in [8]:  # set configuration_id
         genes = list(set(conf[i]['exome']) & set(conf[i]['transcriptome']) & set(conf[i]['init_rates']))
         conf[i]['decay_constants'] = None
         print("found %s genes in common." % len(genes))
@@ -58,7 +64,7 @@ if __name__ == "__main__":
         description = conf[i]['description']
         print(description)
 
-        duration = 10.0
+        duration = 3600.0
 
         tr = translation.TRSL_specific.TRSL_spec(mRNAs, conf[i]['exome'], conf[i]['decay_constants'],
                                                  nribo=20,
