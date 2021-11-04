@@ -41,7 +41,7 @@ import pickle
 import numpy as np
 import numpy.random as npr
 
-import MRNA
+import translation.MRNA
 
 # read model parameters
 from translation.parameters import *
@@ -86,7 +86,7 @@ class TRSL(object):
 
         # Warning: if ribosomes are not passed explicitely in the following MRNA constructor, they will be passed by
         # reference and all MRNAs will share the same ribosome!
-        self.mRNAs = [MRNA.MRNA(index=gene, length=mRNA_length, ribosomes={})
+        self.mRNAs = [translation.MRNA.MRNA(index=gene, length=mRNA_length, ribosomes={})
                       for gene in [ran.randint(1, n_genes) for k in range(self.n_mRNA)]]  # randomized gene expressions
 
         self.proteins = proteome  # contains protein IDs and counts not including polypeptides in statu nascendi
@@ -329,7 +329,7 @@ class TRSL(object):
         attempts to elongate the protein on mRNA by one AA at current_pos
         stops if steric hindrance by another ribosome or end of mRNA is encountered
         """
-        free_codons = (mRNA.find_max_free_range(current_pos) - 3 * MRNA.cr) / 3  # integer division on purpose
+        free_codons = (mRNA.find_max_free_range(current_pos) - 3 * translation.MRNA.cr) / 3  # integer division on purpose
         if self.GTP >= 1 and free_codons > 0:
             # log.debug("elongate_one_step: possible to translocate")
             previous_type = mRNA.ribosomes[current_pos]  # type to be released at ribo_pos

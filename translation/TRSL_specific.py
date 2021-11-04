@@ -17,8 +17,8 @@ import numpy as np
 import numpy.random as npr
 import pickle as pkl
 
-import TRSL
-import MRNA_specific
+import translation.TRSL
+import translation.MRNA_specific
 
 # read model parameters
 from translation.parameters import *
@@ -77,7 +77,7 @@ wobble = {codon: 1.000 if codon_anticodon[codon] != '*' and codon == revcom(codo
 # TRSL class definition
 #############################################################################################################
 
-class TRSL_spec(TRSL.TRSL):
+class TRSL_spec(translation.TRSL.TRSL):
     def __init__(self, mRNAs, gene_library, decay_constants=None, nribo=200000, proteome=col.Counter({}), detail=False):
         super(TRSL_spec, self).__init__(nribo, proteome, detail)
         self._tRNA = col.Counter({i: tRNA_types[i]['abundancy'] for i in tRNA_types})

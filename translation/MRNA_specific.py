@@ -1,4 +1,4 @@
-import MRNA
+import translation.MRNA
 
 # read model parameters
 from translation.parameters import stopcodons
@@ -18,14 +18,14 @@ Parameters:
 """
 
 
-class mRNA_spec(MRNA.MRNA):
+class mRNA_spec(translation.MRNA.MRNA):
     def __init__(self, index, sequence, geneID, ribosomes, init_rate):
         """
         initializes one mRNA molecule
         """
         self.sequence = sequence
         self.init_rate = init_rate  # ORF-specific initiation rate
-        MRNA.MRNA.__init__(self, index=index, length=len(self.sequence), geneID=geneID, ribosomes=ribosomes)
+        translation.MRNA.MRNA.__init__(self, index=index, length=len(self.sequence), geneID=geneID, ribosomes=ribosomes)
 
     def termination_condition(self):
         """
