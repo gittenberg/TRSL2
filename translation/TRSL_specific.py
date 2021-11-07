@@ -232,7 +232,7 @@ if __name__ == "__main__":
     for gene in genes:
         # print "abundancies and initiation rates available for gene:", gene
         for instance in range(conf['transcriptome'][gene]):
-            mRNAs.append(MRNA_specific.mRNA_spec(index=counter, sequence=conf['exome'][gene], geneID=gene, ribosomes={}, init_rate=conf['init_rates'][gene]))  # do not just multiply the list
+            mRNAs.append(translation.MRNA_specific.mRNA_spec(index=counter, sequence=conf['exome'][gene], geneID=gene, ribosomes={}, init_rate=conf['init_rates'][gene]))  # do not just multiply the list
             counter += 1
     print("built gene library, next: run TRSL_spec.")
 

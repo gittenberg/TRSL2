@@ -18,15 +18,15 @@ conf = {1: {
     'description': 'test configuration with 2 genes in 3 transcripts',
     'tRNA': col.Counter({i: 100 for i in translation.TRSL_specific.tRNA_types})},
     2: {
-    'exome': pickle.load(open("../parameters/orf_coding.p", "rb")),
-    'transcriptome': pickle.load(open("../parameters/transcriptome_plotkin_20000.p", "rb")),
-    'init_rates': pickle.load(open("../parameters/init_rates_plotkin.p", "rb")),
+    'exome': pickle.load(open("./parameters/orf_coding.p", "rb")),
+    'transcriptome': pickle.load(open("./parameters/transcriptome_plotkin_20000.p", "rb")),
+    'init_rates': pickle.load(open("./parameters/init_rates_plotkin.p", "rb")),
     'description': '20000 transcriptome, full exome, no decay, Plotkin initiation probabilities'},
     8: {
     # base case run with reduced number of genes (limited by availability of initiation rates)
-    'exome': pickle.load(open("../parameters/orf_coding.p", "rb")),
-    'transcriptome': pickle.load(open("../parameters/transcriptome_shah.p", "rb")),
-    'init_rates': pickle.load(open("../parameters/init_rates_plotkin.p", "rb")),
+    'exome': pickle.load(open("./parameters/orf_coding.p", "rb")),
+    'transcriptome': pickle.load(open("./parameters/transcriptome_shah.p", "rb")),
+    'init_rates': pickle.load(open("./parameters/init_rates_plotkin.p", "rb")),
     'description': 'updated Shah transcriptome, full exome, no decay, updated initiation rates according to Shah'}
 }
 
@@ -64,10 +64,10 @@ if __name__ == "__main__":
         description = conf[i]['description']
         print(description)
 
-        duration = 3600.0
+        duration = 60.0
 
         tr = translation.TRSL_specific.TRSL_spec(mRNAs, conf[i]['exome'], conf[i]['decay_constants'],
-                                                 nribo=200000,
+                                                 nribo=20,
                                                  detail=True)
         # overwrite tRNA:
         if 'tRNA' not in conf[i]:
@@ -88,4 +88,4 @@ if __name__ == "__main__":
 
         tr.solve_internal(0.0, duration, deltat=0.05)
 
-        tr.dump_results(description)
+        tr.dump_results(description, dirname="")
