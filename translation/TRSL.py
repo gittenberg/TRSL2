@@ -90,7 +90,7 @@ class TRSL(object):
                       for gene in [ran.randint(1, n_genes) for k in range(self.n_mRNA)]]  # randomized gene expressions
 
         self.proteins = proteome  # contains protein IDs and counts not including polypeptides in statu nascendi
-        self.protein_length = sum(self.proteins.values())  # equals number of peptide bonds # TODO: what are values?
+        self.protein_length = sum(self.proteins.values())  # equals number of peptide bonds?
 
         self.init_rate = self.p_init / tau_ribo / num_pos_ribo   # 8.157e-07 s^-1 (yeast)
         self.elong_rate = competition / tau_tRNA / num_pos_tRNA  # 0.000140 s^-1  (yeast)
@@ -329,7 +329,8 @@ class TRSL(object):
         attempts to elongate the protein on mRNA by one AA at current_pos
         stops if steric hindrance by another ribosome or end of mRNA is encountered
         """
-        free_codons = (mRNA.find_max_free_range(current_pos) - 3 * translation.MRNA.cr) / 3  # integer division on purpose
+        # free_codons = (mRNA.find_max_free_range(current_pos) - 3 * translation.MRNA.cr) / 3  # integer division on purpose # TODO: old version - wrong?
+        free_codons = mRNA.find_max_free_range(current_pos) / 3  # integer division on purpose
         if self.GTP >= 1 and free_codons > 0:
             # log.debug("elongate_one_step: possible to translocate")
             previous_type = mRNA.ribosomes[current_pos]  # type to be released at ribo_pos
@@ -513,7 +514,7 @@ class TRSL(object):
             if int(time) == time:
                 print("solve_internal: reached time %.2f sec." % time)
             log.info("################################################################################################")
-            log.info("solve_internal: time: .2f" % time)
+            log.info(f"solve_internal: time: {time:.2f}")
             log.info("################################################################################################")
 
             self.update_processes(deltat, time)

@@ -148,7 +148,7 @@ class TRSL_spec(translation.TRSL.TRSL):
             change_flag = self.fill_empty_ribosomes(mRNA, available_time)  # if a tRNA bound this becomes True
             self.elongate_mRNA(mRNA)  # translocate all ribosomes by one step if possible
             available_time *= 0.5
-            # log.debug("update_elongation: from mRNA %s: halving time, available time is now %s", mRNA.index, available_time)
+            log.debug("update_elongation: from mRNA %s: halving time, available time is now %s", mRNA.index, available_time)
 
     def fill_empty_ribosomes(self, mRNA, deltat):
         """

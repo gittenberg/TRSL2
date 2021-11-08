@@ -70,7 +70,7 @@ if __name__ == "__main__":
         duration = 3600.0
 
         tr = translation.TRSL_specific.TRSL_spec(mRNAs, conf[i]['exome'], conf[i]['decay_constants'],
-                                                 nribo=200000,
+                                                 nribo=200000*0.75,
                                                  detail=True)
         # overwrite tRNA:
         if 'tRNA' not in conf[i]:
